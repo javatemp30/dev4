@@ -44,7 +44,7 @@ kubectl delete service nginx-pod
 # 🧪 2. Deploy Flask App (From Docker Hub)
 
 ## ▶️ Create Deployment
-kubectl create deployment flask-deploy --image=yourusername/flask-docker-app:latest
+kubectl create deployment flask-deploy --image=tempjava30/flask-app:latest
 
 ## ▶️ Verify Pods
 kubectl get pods
@@ -80,61 +80,29 @@ Expected:
 
 ---
 
-## 🛑 Cleanup
+## 🛑 Cleanup(make sure to delete before flask ui app)
 kubectl delete deployment flask-deploy
 kubectl delete service flask-deploy
 
 ---
+# 🎨 Deploy Flask UI App (Docker Hub)
 
-# 🎨 4. Deploy CSS Styled Flask App (Docker Hub)
+## ▶️ Create Deployment
 
-## ▶️ Build Docker Image
-docker build -t flask-docker-app .
+```bash
+kubectl create deployment flask-ui-deploy \
+  --image=tempjava30/flask-ui-app:latest
 
----
-
-## ▶️ Tag Image
-docker tag flask-docker-app yourusername/flask-docker-app:latest
-
----
-
-## ▶️ Login to Docker Hub
-docker login
-
----
-
-## ▶️ Push Image
-docker push yourusername/flask-docker-app:latest
-
----
-
-## ▶️ Deploy on Kubernetes
-kubectl create deployment flask-deploy --image=yourusername/flask-docker-app:latest
-
----
-
-## ▶️ Verify Pods
 kubectl get pods
 
----
+kubectl expose deployment flask-ui-deploy \
+  --name=flask-ui-service \
+  --type=NodePort \
+  --port=5000
 
-## ▶️ Expose Application
-kubectl expose deployment flask-deploy --type=NodePort --port=5000
+kubectl get services
 
----
-
-## 🌐 Access Application
-minikube service flask-deploy
-
-Expected Output:
-Styled Flask page (black background, green text)
-
----
-
-# 📈 Scale Again (Optional)
-
-kubectl scale deployment flask-deploy --replicas=3
-kubectl get pods
+minikube service flask-ui-service
 
 ---
 
